@@ -8,8 +8,6 @@
 #########################################################################
 
 from numpy import *
-import matplotlib
-import matplotlib.pyplot as plt
 import operator
 
 def createDataSet():
@@ -17,7 +15,7 @@ def createDataSet():
 	labels = ['A', 'A', 'B', 'B']
 	return group, labels
 
-#分类函数
+#分类函数，kNN算法的实现
 def classify(inX, dataSet, labels, k):
 	dataSetSize = dataSet.shape[0] #shape[0]表示矩阵的行数
 
@@ -61,26 +59,35 @@ def autoNorm(dataSet):
 	normMat = zeros(shape(dataSet)) #初始化成零矩阵
 	normMat = dataSet - tile(minMat, (m, 1)) #求得矩阵每个元素与当前列最小值之差
 	normMat = normMat / tile(rangesMat, (m, 1)) #然后除以当前列的范围，以转化为0到1之间的值
-	return normMat, rangesMat, minMat
+	return normMat
 
-	
+#测试函数，测试分类器的准确性
+def testFuc():
+	testPercent = 0.10 #用10%的数据来作为测试集
+	dataMat, dataLabels = file2mat('./data/datingTestSet2.txt') #读入文本数据，并生成数据矩阵和类别列表
+	normMat = autoNorm(dataMat) #对数据进行归一化，得到归一化后的矩阵
+	m = normMat.shape[0] #矩阵的行数
+	testNum = int(m * testPercent) #测试数据的行数
+	errorCount = 0 #用来错误分类的数目
+	for i in range(testNum):
+		resultLabel = classify(normMat[i, :], normMat[testNum:m, :], dataLabels[testNum : m], 3) #利用分类函数进行分类
+		print 'test result label is: %d, real label is: %d.' % (resultLabel, dataLabels[i])
+		if resultLabel != dataLabels[i]: #如果分类错误，就统一错误的数目
+			errorCount += 1
+	print 'the total error rate is:', (errorCount / float(testNum)) #输入分类错误率
+
+
+
 
 
 
 if __name__ == '__main__':
-	group, labels = createDataSet()
-	myclass = classify((0,0), group, labels, 3)
-	print myclass
 
-	mat, lst = file2mat('./data/datingTestSet2.txt')
+	#test1
+	#group, labels = createDataSet()
+	#myclass = classify((0,0), group, labels, 3)
+	#print myclass
 
-	#fig = plt.figure()
-	#ax = fig.add_subplot(111)
-	#ax.scatter(mat[:, 2], mat[:, 0], 15.0 * array(lst), 15.0 * array(lst))
-	#plt.show()
-	
-	normMat, rangesMat, minMat = autoNorm(mat)
-	print normMat
-	print rangesMat
-	print minMat
+	#test2 
+	testFuc()
 
