@@ -1,2 +1,3 @@
 # ML-in-action
-this is the code of the book: Machine Learning in Action.
+机器学习经典算法的python实现，包括算法原型的实现，以及一些测试数据及例子。有详细注释，便于理解。
+参考于机器学习实战
